@@ -1,6 +1,6 @@
-import React, { useState } from 'react'
+import React, { useState , useEffect } from 'react'
 import {Button, Tooltip, Input} from 'antd'
-import { ReloadOutlined, CaretRightFilled } from '@ant-design/icons';
+import { ReloadOutlined, CaretRightFilled, StopFilled} from '@ant-design/icons';
 
 import Col from './Col'
 
@@ -20,7 +20,25 @@ const Grid = ({squareSize, height, width}) => {
 
     const forceUpdate = useForceUpdate()
 
+    const reset = () => {
+        initializeGrid()
+    }
 
+    useEffect(() => {
+        setPlaying(false)
+    }, [interval])
+
+    // useEffect(() => {
+    //     if(playing == true){
+    //         playGame(grid)
+    //     }
+    // },[playing])
+
+    useEffect(() => {
+        if(playing){
+            setTimeout(() => gameOfLife(grid),interval)
+        }
+    },[playing, grid])
 
     const initializeGrid = () => {
         let rowSquares = Math.floor(width / squareSize)
@@ -165,9 +183,15 @@ const Grid = ({squareSize, height, width}) => {
          <div style={{marginTop: '20px', display: 'flex', justifyContent: 'space-between'}}>
          <Button type="primary"  style={{marginRight: '10px'}} shape="round" onClick={() => gameOfLife(grid)}>Next Generation</Button>
          <div style={{display: 'flex'}}>
-         <Tooltip title="Play"><Button shape="circle" type="ghost" icon={<CaretRightFilled/>}/></Tooltip>
-         <Input type="number" placeholder="Interval" suffix="MS" style={{margin: '0px 10px', width: '130px'}} value={interval}/>
-         <Tooltip title="Reset Board"><Button shape="circle" type="ghost" icon={<ReloadOutlined/>}/></Tooltip>
+     
+         <Tooltip title={playing ? "Stop ": "Play"}><Button onClick={() => {
+             setPlaying(!playing)
+         }} shape="circle" type="ghost" icon={playing ? <StopFilled/>:<CaretRightFilled/>}/></Tooltip>
+         
+        
+        
+         <Input type="number" placeholder="Interval" onChange={(e) => setInterval(e.target.value) } suffix="MS" style={{margin: '0px 10px', width: '130px'}} value={interval}/>
+         <Tooltip onClick={() => reset()} title="Reset Board"><Button shape="circle" type="ghost" icon={<ReloadOutlined/>}/></Tooltip>
 
          </div>
          </div>
