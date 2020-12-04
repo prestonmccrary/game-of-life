@@ -1,0 +1,14 @@
+@import '~antd/dist/antd.css';
+
+* {
+  margin: 0px
+}
+
+.circle{
+  background: #bae7ff
+}
+
+.circle:hover{
+  background: #91d5ff;
+  transition: ease 0.05s;
+}
