@@ -28,6 +28,10 @@ const Grid = ({squareSize, height, width}) => {
         setPlaying(false)
     }, [interval])
 
+    useEffect(() => {
+        initializeGrid()
+    }, [height, width])
+
     // useEffect(() => {
     //     if(playing == true){
     //         playGame(grid)

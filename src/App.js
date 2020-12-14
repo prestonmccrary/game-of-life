@@ -10,20 +10,22 @@ let squareSize = 20
 function App() {
 
 
-  const [colKey, setColKeys] = useState([])
+  const [size, setSize] = useState(window.innerHeight * .75)
   
 
 
 
   useEffect(() => {
+   window.addEventListener('resize', () => {
+     setSize(window.innerHeight * .75)
+   })
    
   }, [])
 
 
-
   return (
     <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100vw', height: '100vh', overflow: 'hidden'}}>
-          <Grid width={750} height={750} squareSize={25}/>
+          <Grid width={size} height={size} squareSize={15}/>
     </div>
   );
 }
