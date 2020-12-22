@@ -1,14 +1,36 @@
 import React, { useState , useEffect } from 'react'
-import {Button, Tooltip, Input} from 'antd'
-import { ReloadOutlined, CaretRightFilled, StopFilled} from '@ant-design/icons';
+import {Button, Tooltip, Input, Drawer, Typography} from 'antd'
+import { ReloadOutlined, CaretRightFilled, StopFilled, AppstoreOutlined} from '@ant-design/icons';
 
 import Col from './Col'
 
+import {motion} from 'framer-motion'
+
+const {Title} = Typography
 
 function useForceUpdate(){
     const [value, setValue] = useState(0); // integer state
     return () => setValue(value => ++value); // update the state to force render
 }
+
+const prebuiltData = [
+    {
+        name: "Glider",
+        arr: [
+            [false, false, true],
+            [true, false, true],
+            [false, true, true]
+        ]
+    },
+    {
+        name: "Glider",
+        arr: [
+            [false, false, true],
+            [true, false, true],
+            [false, true, true]
+        ]
+    }
+]
 
 const Grid = ({squareSize, height, width}) => {
 
@@ -17,6 +39,9 @@ const Grid = ({squareSize, height, width}) => {
     const [playing,setPlaying] = useState(false)
 
     const [interval, setInterval] = useState(1000)
+
+    const [drawer, setDrawer] = useState(false)
+
 
     const forceUpdate = useForceUpdate()
 
@@ -184,10 +209,11 @@ const Grid = ({squareSize, height, width}) => {
         :
         <h1>loading</h1>
         }
-         <div style={{marginTop: '20px', display: 'flex', justifyContent: 'space-between'}}>
+         <div style={{marginTop: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
          <Button type="primary"  style={{marginRight: '10px'}} shape="round" onClick={() => gameOfLife(grid)}>Next Generation</Button>
+         <Tooltip title="Prebuilt Boards"><Button shape="circle" onClick={() => setDrawer(true)}  type="ghost" icon={<AppstoreOutlined/>}/></Tooltip>
          <div style={{display: 'flex'}}>
-     
+
          <Tooltip title={playing ? "Stop ": "Play"}><Button onClick={() => {
              setPlaying(!playing)
          }} shape="circle" type="ghost" icon={playing ? <StopFilled/>:<CaretRightFilled/>}/></Tooltip>
@@ -196,10 +222,37 @@ const Grid = ({squareSize, height, width}) => {
         
          <Input type="number" placeholder="Interval" onChange={(e) => setInterval(e.target.value) } suffix="MS" style={{margin: '0px 10px', width: '130px'}} value={interval}/>
          <Tooltip onClick={() => reset()} title="Reset Board"><Button shape="circle" type="ghost" icon={<ReloadOutlined/>}/></Tooltip>
-
          </div>
          </div>
         
+         <Drawer
+          title="Prebuilt"
+          width={400}
+          onClose={() => setDrawer(false)}
+          visible={drawer}
+       
+        >
+            <div style={{margin:"0px 0px"}}>
+                {prebuiltData.map((prebuilt, idx) => {
+                    
+                    return(
+                        <motion.div whileHover={{scale: 1.005}} style={{marginTop: idx != 0 && "40px",cursor: 'pointer',display: 'flex', justifyContent: 'space-between', alignItems:'center'}}>
+                            <Title level={4}>{prebuilt.name}</Title>
+                            <div style={{display: 'flex', flexDirection: 'row'}}>
+                            {prebuilt.arr.map((row, colNum) => {
+                                return <Col gridColor={"transparent"} squares={row} squareSize={squareSize} callback={() => {}}/>
+
+                            })}
+                            </div>
+                        </motion.div>
+
+
+                    
+                    )
+                })}
+            </div>
+           
+        </Drawer>
 
     </div>
 
