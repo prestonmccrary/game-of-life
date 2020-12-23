@@ -211,7 +211,6 @@ const Grid = ({squareSize, height, width}) => {
         }
          <div style={{marginTop: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
          <Button type="primary"  style={{marginRight: '10px'}} shape="round" onClick={() => gameOfLife(grid)}>Next Generation</Button>
-         <Tooltip title="Prebuilt Boards"><Button shape="circle" onClick={() => setDrawer(true)}  type="ghost" icon={<AppstoreOutlined/>}/></Tooltip>
          <div style={{display: 'flex'}}>
 
          <Tooltip title={playing ? "Stop ": "Play"}><Button onClick={() => {
@@ -221,7 +220,9 @@ const Grid = ({squareSize, height, width}) => {
         
         
          <Input type="number" placeholder="Interval" onChange={(e) => setInterval(e.target.value) } suffix="MS" style={{margin: '0px 10px', width: '130px'}} value={interval}/>
-         <Tooltip onClick={() => reset()} title="Reset Board"><Button shape="circle" type="ghost" icon={<ReloadOutlined/>}/></Tooltip>
+         <Tooltip onClick={() => reset()} title="Reset Board"><Button shape="circle" type="ghost" style={{marginRight: '10px'}} icon={<ReloadOutlined/>}/></Tooltip>
+         <Tooltip title="Prebuilt Boards"><Button shape="circle" onClick={() => setDrawer(true)}  type="ghost" icon={<AppstoreOutlined/>}/></Tooltip>
+
          </div>
          </div>
         
@@ -236,11 +237,24 @@ const Grid = ({squareSize, height, width}) => {
                 {prebuiltData.map((prebuilt, idx) => {
                     
                     return(
-                        <motion.div whileHover={{scale: 1.005}} style={{marginTop: idx != 0 && "40px",cursor: 'pointer',display: 'flex', justifyContent: 'space-between', alignItems:'center'}}>
-                            <Title level={4}>{prebuilt.name}</Title>
+                        <motion.div 
+                        onClick={() => {
+                            let xStart = Math.floor( grid.length / 2) - prebuilt.arr.length
+                            let yStart = Math.floor( grid.length / 2) - prebuilt.arr[0].length
+
+                            for(let i = 0; i < prebuilt.arr.length; i++){
+                                for(let j = 0; j < prebuilt.arr[i].length; j++){
+                                    grid[xStart + i + 2][yStart + j + 2] = prebuilt.arr[j][i]
+                                }
+                            }
+
+                            setDrawer(false)
+                        }}
+                        whileHover={{scale: 1.01}} style={{marginTop: idx != 0 && "40px",cursor: 'pointer',display: 'flex', justifyContent: 'space-between', alignItems:'center'}}>
+                            <Title style={{fontWeight: 400}} level={4}>{prebuilt.name}</Title>
                             <div style={{display: 'flex', flexDirection: 'row'}}>
                             {prebuilt.arr.map((row, colNum) => {
-                                return <Col gridColor={"transparent"} squares={row} squareSize={squareSize} callback={() => {}}/>
+                                return <Col gridColor={"transparent"} squares={row} squareSize={10} callback={() => {}}/>
 
                             })}
                             </div>
